@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Speech Recognition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-oN5aHKbZLLxUnL4L4QqQjFpqzah5GCXv8QeTtPLzU5i+3iOACnOTPPqvJ48tUWEo" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: monospace;
+            background-color: black;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .content {
+            text-align: center;
+        }
+        
+        .button-container {
+            margin-top: 20px;
+        }
+        .transcript {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .transcript-icon {
+            margin-right: 10px;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container mt-5 col-md-12 col-sm-12 col-lg-12">
+        <div class="content">
+            <h1 id="status" class="fw-bold" style="color:white;">Click the button and ask me anything:</h1>
+            <div class="button-container">
+                <button onclick="startListening()" class="btn btn-info">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-mic" viewBox="0 0 16 16">
+                        <path d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5"></path>
+                        <path d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="mt-3">
+                <h5 style="color:red;"  id="transcripted"></h5>
+                <h5 style="color:rgb(115, 255, 0);" id="transcript_output"></h5>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function startListening() {
+        // Clear previous transcripts
+        document.getElementById('transcripted').textContent = '';
+        document.getElementById('transcript_output').textContent = '';
+    
+        // Update the status text
+        document.getElementById('status').textContent = 'I am listening...';
+    
+        // Start listening
+        fetch('/listen', { method: 'POST' })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('transcripted').textContent = data.transcripted;
+                document.getElementById('transcript_output').textContent = data.transcript_output;
+    
+                // Update the status text after receiving the response
+                document.getElementById('status').textContent = 'Click the button and ask me anything:';
+            })
+            .catch(error => {
+                document.getElementById('transcripted').textContent = 'Error: ' + error;
+                // Update the status text in case of an error
+                document.getElementById('status').textContent = 'Error occurred';
+            });
+    }
+    
+
+
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>
